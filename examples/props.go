@@ -37,18 +37,4 @@ func main() {
 
 	properties := fsmTest.GetPropertiesTransitions()
 	fmt.Println(properties)
-
-	//for eventName, propertiesArray := range properties {
-	//	fmt.Println("event Name : " + eventName)
-	//	fmt.Println("properties : ")
-	//
-	//	if len(propertiesArray) > 0 {
-	//		for propertiesName, propertiesValue := range propertiesArray{
-	//			fmt.Println("properties name : " + propertiesName)
-	//			fmt.Println("properties value : " + strconv.FormatBool(reflect.ValueOf(propertiesValue).Bool()))
-	//		}
-	//	} else {
-	//		fmt.Println("Event doesn't have properties")
-	//	}
-	//}
 }
