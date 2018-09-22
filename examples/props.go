@@ -34,6 +34,7 @@ func main() {
 	)
 
 	fmt.Println(fsmTest.Current())
+	fmt.Println(fsmTest.AvailableTransitions())
 
 	properties := fsmTest.GetPropertiesTransitions()
 	fmt.Println(properties)
