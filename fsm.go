@@ -48,7 +48,7 @@ type FSM struct {
 	callbacks map[cKey]Callback
 
 	// properties event, so it can give additional information for that state
-	props Properties
+	props map[pKey]Properties
 
 	// transition is the internal transition functions used either directly
 	// or when Transition is called in an asynchronous state transition.
@@ -138,22 +138,19 @@ func NewFSM(initial string, events []EventDesc, callbacks map[string]Callback) *
 		current:         initial,
 		transitions:     make(map[eKey]string),
 		callbacks:       make(map[cKey]Callback),
-		props:			 make(Properties),
+		props:			 make(map[pKey]Properties),
 	}
 
 	// Build transition map and store sets of all events and states.
 	allEvents := make(map[string]bool)
 	allStates := make(map[string]bool)
-	allProperties := make(Properties)
+	allProperties := make(map[pKey]Properties)
 	for _, e := range events {
 		for _, src := range e.Src {
 			f.transitions[eKey{e.Name, src}] = e.Dst
 			allStates[src] = true
 			allStates[e.Dst] = true
-
-			if f.current == e.Dst {
-				allProperties[e.Name] = e.Props
-			}
+			allProperties[pKey{e.Name, e.Dst}] = e.Props
 		}
 		allEvents[e.Name] = true
 	}
@@ -263,10 +260,18 @@ func (f *FSM) AvailableTransitions() []string {
 
 // GetPropertiesTransitions return list of additional information available in the
 // current state
-func (f *FSM) GetPropertiesTransitions() Properties {
+func (f *FSM) GetPropertiesTransitions() map[string]Properties {
 	f.stateMu.RLock()
 	defer f.stateMu.RUnlock()
-	return f.props
+
+	var properties = make(map[string]Properties)
+
+	for key, value := range f.props {
+		if key.src == f.current {
+			properties[key.stateName] = value
+		}
+	}
+	return properties
 }
 
 // Cannot returns true if event can not occure in the current state.
@@ -461,6 +466,14 @@ type cKey struct {
 
 	// callbackType is the situation when the callback will be run.
 	callbackType int
+}
+
+type pKey struct {
+	// stateName is the name of the state that the keys refers to.
+	stateName string
+
+	// src is the source from where the event can transition.
+	src string
 }
 
 // eKey is a struct key used for storing the transition map.

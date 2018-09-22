@@ -23,7 +23,7 @@ func main() {
 				Src: []string{"closed"},
 				Dst: "open",
 				Props:fsm.Properties{
-					"editable": true,
+					"editable": false,
 					"deletable": false,},},
 			{
 				Name: "close",
