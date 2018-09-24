@@ -150,7 +150,7 @@ func NewFSM(initial string, events []EventDesc, callbacks map[string]Callback) *
 			f.transitions[eKey{e.Name, src}] = e.Dst
 			allStates[src] = true
 			allStates[e.Dst] = true
-			allProperties[pKey{e.Name, e.Dst}] = e.Props
+			allProperties[pKey{e.Name, src}] = e.Props
 		}
 		allEvents[e.Name] = true
 	}
