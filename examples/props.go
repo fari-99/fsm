@@ -1,15 +1,15 @@
-// +build ignore
 
 package main
 
 import (
 	"fmt"
-	"github.com/fari-99/fsm"
+	//"github.com/fari-99/fsm"
+	".."
 )
 
 func main() {
 	fsmTest := fsm.NewFSM(
-		"open",
+		"closed",
 		fsm.Events{
 			{
 				Name: "pull",
@@ -36,6 +36,10 @@ func main() {
 	fmt.Println(fsmTest.Current())
 	fmt.Println(fsmTest.AvailableTransitions())
 
-	properties := fsmTest.GetPropertiesTransitions()
-	fmt.Println(properties)
+	fmt.Println(fsmTest.GetPropertiesTransitions("close"))
+	fmt.Println(fsmTest.GetPropertiesTransitions("pull"))
+	fmt.Println(fsmTest.GetPropertiesTransitions("push"))
+
+	fsmTest.Event("pull")
+	fmt.Println(fsmTest.Current())
 }

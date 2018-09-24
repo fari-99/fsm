@@ -260,18 +260,20 @@ func (f *FSM) AvailableTransitions() []string {
 
 // GetPropertiesTransitions return list of additional information available in the
 // current state
-func (f *FSM) GetPropertiesTransitions() map[string]Properties {
+func (f *FSM) GetPropertiesTransitions(stateName string) (properties map[string]interface{}) {
 	f.stateMu.RLock()
 	defer f.stateMu.RUnlock()
 
-	var properties = make(map[string]Properties)
+	properties = make(map[string]interface{})
 
 	for key, value := range f.props {
-		if key.src == f.current {
-			properties[key.stateName] = value
+		if key.stateName == stateName {
+			properties = value
+			return
 		}
 	}
-	return properties
+
+	return
 }
 
 // Cannot returns true if event can not occure in the current state.
